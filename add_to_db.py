@@ -2,9 +2,9 @@ from tkinter import *
 import sqlite3
 import tkinter.messagebox
 
-
 conn = sqlite3.connect(r"C:\Users\Zayeef\PycharmProjects\store\db\store.db")
 cur = conn.cursor()
+
 
 class Database:
     def __init__(self, master, *args, **kwargs):
@@ -12,8 +12,7 @@ class Database:
         self.heading = Label(master, text="Add to database", font="arial 40 bold", fg="black")
         self.heading.place(x=300, y=0)
 
-
-        #Form Labels
+        # Form Labels
         self.product_name = Label(master, text="Product name: ", font="arial 20 bold")
         self.cost_price = Label(master, text="Product cost price: ", font="arial 20 bold")
         self.sell_price = Label(master, text="Product sell price: ", font="arial 20 bold")
@@ -23,7 +22,7 @@ class Database:
         self.sell_price.place(x=0, y=170)
         self.stock.place(x=0, y=220)
 
-        #Form Entries
+        # Form Entries
         self.product_name_e = Entry(master, width=25, font='arial 18 bold')
         self.product_name_e.place(x=300, y=70)
         self.cost_price_e = Entry(master, width=25, font='arial 18 bold')
@@ -33,18 +32,19 @@ class Database:
         self.stock_e = Entry(master, width=25, font='arial 18 bold')
         self.stock_e.place(x=300, y=220)
 
-        #Submit Button
-        self.btn_add = Button(master, text="Add", width=25, height=2, bg='#86eba1', fg='#343438', command=self.getInputs)
+        # Submit Button
+        self.btn_add = Button(master, text="Add", width=25, height=2, bg='#86eba1', fg='#343438',
+                              command=self.getInputs)
         self.btn_add.place(x=300, y=280)
 
-        #Reset btn
+        # Reset btn
         self.btn_reset = Button(master, text="Reset", width=18, height=2, bg='#e64747', fg='#343438',
-                              command=self.reset)
+                                command=self.reset)
         self.btn_reset.place(x=490, y=280)
 
-        #Show All Products
+        # Show All Products
         self.btn_getAll = Button(master, text="Show All Products", width=25, height=2, bg='#7d65e6', fg='#343438',
-                                command=self.getAll)
+                                 command=self.getAll)
         self.btn_getAll.place(x=640, y=400)
 
         # Clear btn
@@ -52,7 +52,7 @@ class Database:
                                 command=self.clear)
         self.btn_clear.place(x=830, y=400)
 
-        #TextBox for updates
+        # TextBox for updates
         self.txBox = Text(master, width=40, height=20)
         self.txBox.place(x=640, y=70)
 
@@ -63,7 +63,6 @@ class Database:
         self.cost_price = self.cost_price_e.get()
         self.total_cost_price = float(self.cost_price) * float(self.stock)
         self.total_sell_price = float(self.sell_price) * float(self.stock)
-
 
         if self.product_name == '' or self.stock == '' or self.cost_price == '' or self.sell_price == '':
             tkinter.messagebox.showinfo("Error", "Please fill all the atributes!")
@@ -82,25 +81,27 @@ class Database:
         self.sell_price_e.delete(0, END)
         self.stock_e.delete(0, END)
 
-
-    def getAll(self,*args, **kwargs):
+    def getAll(self, *args, **kwargs):
         q = "SELECT * from inventory"
         products = cur.execute(q)
         self.clear()
         self.txBox.insert(END, "All Products:\n")
         for product in products:
-            self.txBox.insert(END, "\nProduct no.: " + str(product[0])+"\n" + "Product Name: "+str(product[1])+"\n" + "Cost price: "+str(product[2])+"\n" +"Sell Price: " + str(product[3])+"\n" +"Stock: " +str(product[4])+"\n")
+            self.txBox.insert(END, "\nProduct no.: " + str(product[0]) + "\n" + "Product Name: " + str(
+                product[1]) + "\n" + "Cost price: " + str(product[2]) + "\n" + "Sell Price: " + str(
+                product[3]) + "\n" + "Stock: " + str(product[4]) + "\n")
 
     def clear(self, *args, **kwargs):
         self.txBox.delete(1.0, END)
 
 
+def beginAdd():
+    root = Tk()
+    master = Database(root)
+    root.geometry("1000x480+0+0")
+    root.title("Add to database")
+    root.mainloop()
 
-root = Tk()
-master = Database(root)
 
-root.geometry("1000x480+0+0")
-root.title("Add to database")
-root.mainloop()
-
-
+if __name__ == "__main__":
+    beginAdd()
