@@ -38,6 +38,7 @@ class Database:
                                 command=self.clear)
         self.btn_clear.place(x=830, y=400)
 
+
         # self.choices_for_search = {'ID', 'Name'}
         # self.tkvar = StringVar(master)
         # self.tkvar.set('ID')
@@ -45,10 +46,10 @@ class Database:
         # self.popupMenu.place(x=300, y=200)
 
     def getSearchData(self, *args, **kwargs):
-        q="SELECT * FROM inventory WHERE id=?"
+        q = "SELECT * FROM inventory WHERE id=?"
         result = cur.execute(q, (self.id_en.get(), ))
         for p in result:
-            print(p)
+            # print(p)
             self.pName = p[1]       #product Name
             self.pCostPrice = p[2]  #product cost price
             self.pSellPrice = p[3]  #product sell price
@@ -78,6 +79,10 @@ class Database:
             self.sell_price_e.insert(0, str(self.pSellPrice))
             self.stock_e.insert(0, str(self.pStock))
 
+            self.btn_update = Button(self.master, text="Update Product", width=18, height=2, bg='#74e8aa', fg='#343438',
+                                     command=self.update)
+            self.btn_update.place(x=400, y=380)
+
         conn.commit()
 
 
@@ -93,6 +98,22 @@ class Database:
 
     def clear(self, *args, **kwargs):
         self.txBox.delete(1.0, END)
+
+    def update(self, *args, **kwargs):
+        self.pName = self.product_name_e.get()
+        self.pCostPrice = self.cost_price_e.get()
+        self.pSellPrice = self.sell_price_e.get()
+        self.pStock = self.stock_e.get()
+        self.totalCost = float(self.pCostPrice) * float(self.pStock)
+        self.totalSell = float(self.pSellPrice) * float(self.pStock)
+
+
+        q = "UPDATE inventory SET product_name=?, cost_price=?, sell_price=?, stock=?, total_sell_price=?, total_cost_price=? WHERE id=?"
+        cur.execute(q, (self.pName, self.pCostPrice, self.pSellPrice, self.pStock, self.totalSell,
+                        self.totalCost, self.id_en.get()))
+        conn.commit()
+        tkinter.messagebox.showinfo("Success", "Updated Successfully!")
+
 
 
 def beginUpdate():
